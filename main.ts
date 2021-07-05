@@ -2,7 +2,7 @@ input.onButtonPressed(Button.A, function () {
     cuteBot.motors(0, 0)
 })
 function vypis () {
-    serial.writeLine("name=" + "" + " value=" + value + " time=" + input.runningTime())
+    serial.writeLine("lavyMotor" + lavyMotor + "pravyMotor=" + pravyMotor + " time=" + input.runningTime())
 }
 radio.onReceivedValue(function (name, value) {
     if (name == "lv") {
@@ -28,17 +28,16 @@ basic.showLeds(`
 lavyMotor = 0
 pravyMotor = 0
 basic.forever(function () {
-    if (false) {
-        prekazka = cuteBot.ultrasonic(cuteBot.SonarUnit.Centimeters)
-        if (prekazka < 30 && (lavyMotor != 0 && pravyMotor != 0)) {
-            cuteBot.motors(-10, -10)
-            basic.pause(500)
-            cuteBot.motors(0, 0)
-            basic.pause(200)
-        } else {
-        	
-        }
+    prekazka = cuteBot.ultrasonic(cuteBot.SonarUnit.Centimeters)
+    if (prekazka < 30 && (lavyMotor != 0 && pravyMotor != 0)) {
+        cuteBot.motors(-30, -30)
+        basic.pause(500)
+        cuteBot.motors(-15, -30)
+        basic.pause(100)
+        cuteBot.motors(0, 0)
+        basic.pause(200)
+    } else {
+        cuteBot.motors(lavyMotor, pravyMotor)
+        basic.pause(100)
     }
-    cuteBot.motors(lavyMotor, pravyMotor)
-    basic.pause(100)
 })
