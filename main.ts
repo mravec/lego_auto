@@ -2,42 +2,36 @@ input.onButtonPressed(Button.A, function () {
     cuteBot.motors(0, 0)
 })
 radio.onReceivedValue(function (name, value) {
-    if (name == "x") {
-        xHodnota = value
+    if (name == "lv") {
+        lavyMotor = value
     }
-    if (name == "y") {
-        yHodnota = value
+    if (name == "pv") {
+        pravyMotor = value
     }
+    basic.pause(100)
 })
 let prekazka = 0
-let xHodnota = 0
-let yHodnota = 0
+let pravyMotor = 0
+let lavyMotor = 0
 radio.setGroup(1)
-cuteBot.colorLight(cuteBot.RGBLights.RGB_L, 0x0000ff)
-cuteBot.colorLight(cuteBot.RGBLights.RGB_R, 0xffff00)
 basic.showLeds(`
-    . # . # .
-    # . . . #
-    # . . . #
-    # . . . #
+    . . . . .
     . # # # .
+    . # . # .
+    . # # # .
+    . . . . .
     `)
-for (let index = 0; index < 4; index++) {
-    music.playMelody("A B B A A B B A ", 1400)
-}
-yHodnota = 0
-xHodnota = 0
+lavyMotor = 0
+pravyMotor = 0
 basic.forever(function () {
     prekazka = cuteBot.ultrasonic(cuteBot.SonarUnit.Centimeters)
-    if (prekazka < 30) {
-        cuteBot.motors(-65, -65)
-        basic.pause(2000)
-        cuteBot.motors(0, -65)
+    if (prekazka < 30 && (lavyMotor != 0 && pravyMotor != 0)) {
+        cuteBot.motors(-10, -10)
+        basic.pause(500)
+        cuteBot.motors(0, 0)
         basic.pause(200)
-        cuteBot.motors(0, -65)
-        basic.pause(1000)
     } else {
-        cuteBot.motors(xHodnota, yHodnota)
+        cuteBot.motors(lavyMotor, pravyMotor)
     }
     basic.pause(100)
 })
