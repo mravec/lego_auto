@@ -1,5 +1,9 @@
 function vypis () {
-    serial.writeLine("lavyMotor" + lavyMotor + "pravyMotor=" + pravyMotor + " time=" + input.runningTime())
+    s += 1
+    if (s > 9) {
+        s = 0
+        serial.writeLine("lavyMotor" + lavyMotor + ", pravyMotor=" + pravyMotor + ", time=" + input.runningTime() + ", prekazka=" + prekazka)
+    }
 }
 radio.onReceivedValue(function (name, value) {
     if (name == "lv") {
@@ -10,10 +14,13 @@ radio.onReceivedValue(function (name, value) {
     }
 })
 input.onLogoEvent(TouchButtonEvent.Touched, function () {
+    lavyMotor = 0
+    pravyMotor = 0
     cuteBot.motors(0, 0)
     soundExpression.spring.play()
 })
 let prekazka = 0
+let s = 0
 let pravyMotor = 0
 let lavyMotor = 0
 serial.redirectToUSB()
@@ -28,10 +35,11 @@ basic.showLeds(`
     `)
 lavyMotor = 0
 pravyMotor = 0
+s = 0
 soundExpression.happy.play()
 basic.forever(function () {
     prekazka = cuteBot.ultrasonic(cuteBot.SonarUnit.Centimeters)
-    if (prekazka < 30 && (lavyMotor != 0 && pravyMotor != 0)) {
+    if (prekazka < 30 && (lavyMotor > 0 || pravyMotor > 0)) {
         cuteBot.motors(-30, -30)
         basic.pause(500)
         cuteBot.motors(-15, -30)
