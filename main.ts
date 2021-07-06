@@ -1,6 +1,3 @@
-input.onButtonPressed(Button.A, function () {
-    cuteBot.motors(0, 0)
-})
 function vypis () {
     serial.writeLine("lavyMotor" + lavyMotor + "pravyMotor=" + pravyMotor + " time=" + input.runningTime())
 }
@@ -11,6 +8,10 @@ radio.onReceivedValue(function (name, value) {
     if (name == "pv") {
         pravyMotor = value
     }
+})
+input.onLogoEvent(TouchButtonEvent.Touched, function () {
+    cuteBot.motors(0, 0)
+    soundExpression.spring.play()
 })
 let prekazka = 0
 let pravyMotor = 0
@@ -27,6 +28,7 @@ basic.showLeds(`
     `)
 lavyMotor = 0
 pravyMotor = 0
+soundExpression.happy.play()
 basic.forever(function () {
     prekazka = cuteBot.ultrasonic(cuteBot.SonarUnit.Centimeters)
     if (prekazka < 30 && (lavyMotor != 0 && pravyMotor != 0)) {
