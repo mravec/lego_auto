@@ -50,7 +50,6 @@ let s = 0
 let pravyMotor = 0
 let lavyMotor = 0
 serial.redirectToUSB()
-serial.writeLine("Start")
 radio.setGroup(1)
 basic.showLeds(`
     . . . . .
