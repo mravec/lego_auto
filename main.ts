@@ -67,6 +67,7 @@ basic.forever(function () {
     prekazka = cuteBot.ultrasonic(cuteBot.SonarUnit.Centimeters)
     if (prekazka < 30 && (lavyMotor > 0 || pravyMotor > 0)) {
         vypis("  prekazka ")
+        cuteBot.motors(0, 0)
         basic.pause(500)
         cuteBot.motors(-42, -42)
         basic.pause(200)
