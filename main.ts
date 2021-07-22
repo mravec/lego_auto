@@ -3,8 +3,8 @@ function nastav_servo_rychlosti (nova_rychlost: number) {
     pins.servoWritePin(AnalogPin.P2, Math.map(rychlost, -100, 100, 0, 180))
 }
 input.onButtonPressed(Button.A, function () {
-    nastav_servo_rychlosti(100)
-    soundExpression.spring.play()
+    servo_otacania += 10
+    pins.servoWritePin(AnalogPin.P1, servo_otacania)
     basic.showLeds(`
         . . # . .
         . # # # .
@@ -12,17 +12,25 @@ input.onButtonPressed(Button.A, function () {
         . . # . .
         . . # . .
         `)
+    vypis_servo_otacania()
 })
+function vypis_servo_otacania () {
+    aktualny_cas = input.runningTime()
+    if (aktualny_cas - stary_cas > 1000) {
+        stary_cas = aktualny_cas
+        serial.writeLine("servo otacania" + servo_otacania)
+    }
+}
 function vypis () {
     aktualny_cas = input.runningTime()
     if (aktualny_cas - stary_cas > 1000) {
         stary_cas = aktualny_cas
-        serial.writeLine("rychlost" + rychlost + ", kompas=" + "")
+        serial.writeLine("rychlost" + rychlost + ", kompas zmena=" + kompas_zmena)
     }
 }
 input.onButtonPressed(Button.B, function () {
-    nastav_servo_rychlosti(-100)
-    soundExpression.slide.play()
+    servo_otacania += -10
+    pins.servoWritePin(AnalogPin.P1, servo_otacania)
     basic.showLeds(`
         . . # . .
         . . # . .
@@ -30,6 +38,7 @@ input.onButtonPressed(Button.B, function () {
         . # # # .
         . . # . .
         `)
+    vypis_servo_otacania()
 })
 radio.onReceivedValue(function (name, value) {
     if (name == "v") {
@@ -43,12 +52,28 @@ input.onLogoEvent(TouchButtonEvent.Touched, function () {
     nastav_servo_rychlosti(0)
 })
 function nastav_servo_otacania (kompas_ovladac: number) {
-    kompas_auto = input.compassHeading()
-    pins.servoWritePin(AnalogPin.P1, 0)
+    if (rychlost != 0) {
+        kompas_auto = input.compassHeading()
+        kompas_zmena = kompas_ovladac - kompas_auto
+        if (kompas_zmena > 180) {
+            kompas_zmena += -360
+        }
+        if (kompas_zmena < -180) {
+            kompas_zmena += 360
+        }
+        if (kompas_zmena < -10) {
+            pins.servoWritePin(AnalogPin.P1, 0)
+        } else if (kompas_zmena > 10) {
+            pins.servoWritePin(AnalogPin.P1, 180)
+        }
+        vypis()
+    }
 }
 let kompas_auto = 0
+let kompas_zmena = 0
 let stary_cas = 0
 let aktualny_cas = 0
+let servo_otacania = 0
 let rychlost = 0
 serial.redirectToUSB()
 radio.setGroup(1)
@@ -61,6 +86,7 @@ basic.showLeds(`
     `)
 rychlost = 0
 soundExpression.happy.play()
+servo_otacania = 90
 basic.forever(function () {
-    basic.pause(100)
+	
 })
