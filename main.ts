@@ -1,7 +1,8 @@
+function nastav_servo_rychlosti (nova_rychlost: number) {
+    rychlost = nova_rychlost
+}
 input.onButtonPressed(Button.A, function () {
-    lavyMotor = 50
-    pravyMotor = 50
-    cuteBot.motors(50, 50)
+    nastav_servo_rychlosti(100)
     soundExpression.spring.play()
     basic.showLeds(`
         . . # . .
@@ -15,13 +16,11 @@ function vypis (text: string) {
     s += 1
     if (s > 1) {
         s = 0
-        serial.writeLine("lavyMotor" + lavyMotor + ", pravyMotor=" + pravyMotor + ", time=" + input.runningTime() + ", prekazka=" + prekazka + text)
+        serial.writeLine("ryclost" + rychlost + ", kompas=" + kompas)
     }
 }
 input.onButtonPressed(Button.B, function () {
-    lavyMotor = -50
-    pravyMotor = -50
-    cuteBot.motors(-50, -50)
+    nastav_servo_rychlosti(-100)
     soundExpression.slide.play()
     basic.showLeds(`
         . . # . .
@@ -32,23 +31,19 @@ input.onButtonPressed(Button.B, function () {
         `)
 })
 radio.onReceivedValue(function (name, value) {
-    if (name == "lv") {
-        lavyMotor = value
+    if (name == "v") {
+        nastav_servo_rychlosti(value)
     }
-    if (name == "pv") {
-        pravyMotor = value
+    if (name == "k") {
+        kompas = value
     }
 })
 input.onLogoEvent(TouchButtonEvent.Touched, function () {
-    lavyMotor = 0
-    pravyMotor = 0
-    cuteBot.motors(0, 0)
-    soundExpression.spring.play()
+    nastav_servo_rychlosti(0)
 })
-let prekazka = 0
+let kompas = 0
 let s = 0
-let pravyMotor = 0
-let lavyMotor = 0
+let rychlost = 0
 serial.redirectToUSB()
 radio.setGroup(1)
 basic.showLeds(`
@@ -58,25 +53,11 @@ basic.showLeds(`
     . # # # .
     . . . . .
     `)
-lavyMotor = 0
-pravyMotor = 0
-s = 0
+rychlost = 0
 soundExpression.happy.play()
 basic.forever(function () {
-    prekazka = cuteBot.ultrasonic(cuteBot.SonarUnit.Centimeters)
-    if (prekazka < 30 && (lavyMotor > 0 || pravyMotor > 0)) {
-        vypis("  prekazka ")
-        cuteBot.motors(0, 0)
-        basic.pause(500)
-        cuteBot.motors(-42, -42)
-        basic.pause(200)
-        cuteBot.motors(19, -42)
-        basic.pause(200)
-        cuteBot.motors(0, 0)
-        basic.pause(200)
-    } else {
-        cuteBot.motors(lavyMotor, pravyMotor)
-        vypis("  normal ")
-        basic.pause(100)
-    }
+    let pravyMotor = 0
+    let lavyMotor = 0
+    cuteBot.motors(lavyMotor, pravyMotor)
+    basic.pause(100)
 })
