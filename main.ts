@@ -88,6 +88,3 @@ stary_cas = 0
 rychlost = 0
 soundExpression.happy.play()
 servo_otacania = 90
-basic.forever(function () {
-	
-})
