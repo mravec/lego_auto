@@ -71,10 +71,10 @@ function nastav_servo_otacania (kompas_ovladac: number) {
 }
 let kompas_auto = 0
 let kompas_zmena = 0
-let stary_cas = 0
 let aktualny_cas = 0
 let servo_otacania = 0
 let rychlost = 0
+let stary_cas = 0
 serial.redirectToUSB()
 radio.setGroup(1)
 basic.showLeds(`
@@ -84,6 +84,7 @@ basic.showLeds(`
     . # # # .
     . . . . .
     `)
+stary_cas = 0
 rychlost = 0
 soundExpression.happy.play()
 servo_otacania = 90
