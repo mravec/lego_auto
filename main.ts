@@ -61,9 +61,9 @@ function nastav_servo_otacania (kompas_ovladac: number) {
         if (kompas_zmena < -180) {
             kompas_zmena += 360
         }
-        if (kompas_zmena < -10) {
+        if (kompas_zmena < -30) {
             pins.servoWritePin(AnalogPin.P1, 85)
-        } else if (kompas_zmena > 10) {
+        } else if (kompas_zmena > 30) {
             pins.servoWritePin(AnalogPin.P1, 150)
         }
         vypis()
